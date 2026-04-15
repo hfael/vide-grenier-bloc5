@@ -23,15 +23,15 @@ class User extends \Core\Controller
      */
     public function loginAction()
     {
-        if(isset($_POST['submit'])){
+        if (isset($_POST['submit'])) {
             $f = $_POST;
 
-            // TODO: Validation
+            $loginSuccess = $this->login($f);
 
-            $this->login($f);
-
-            // Si login OK, redirige vers le compte
-            header('Location: /account');
+            if ($loginSuccess) {
+                header('Location: /account');
+                exit;
+            }
         }
 
         View::renderTemplate('User/login.html');
@@ -45,14 +45,23 @@ class User extends \Core\Controller
         if(isset($_POST['submit'])){
             $f = $_POST;
 
-            if($f['password'] !== $f['password-check']){
-                // TODO: Gestion d'erreur côté utilisateur
+            if ($f['password'] !== $f['password-check']) {
+                View::renderTemplate('User/register.html');
+                return;
             }
 
             // validation
 
-            $this->register($f);
-            // TODO: Rappeler la fonction de login pour connecter l'utilisateur
+            $userID = $this->register($f);
+
+            if ($userID) {
+                $loginSuccess = $this->login($f);
+
+                if ($loginSuccess) {
+                    header('Location: /account');
+                    exit;
+                }
+            }
         }
 
         View::renderTemplate('User/register.html');
@@ -63,6 +72,11 @@ class User extends \Core\Controller
      */
     public function accountAction()
     {
+        if (!isset($_SESSION['user'])) {
+            header('Location: /login');
+            exit;
+        }
+
         $articles = Articles::getByUser($_SESSION['user']['id']);
 
         View::renderTemplate('User/account.html', [
@@ -107,10 +121,9 @@ class User extends \Core\Controller
                 return false;
             }
 
-            // TODO: Create a remember me cookie if the user has selected the option
-            // to remained logged in on the login form.
-            // https://github.com/andrewdyer/php-mvc-register-login/blob/development/www/app/Model/UserLogin.php#L86
-
+            if (isset($data['remember_me'])) {
+                session_set_cookie_params(60 * 60 * 24 * 30);
+            }
             $_SESSION['user'] = array(
                 'id' => $user['id'],
                 'username' => $user['username'],
