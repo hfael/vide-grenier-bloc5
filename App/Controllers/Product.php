@@ -18,20 +18,23 @@ class Product extends \Core\Controller
      */
     public function indexAction()
     {
+        if (!isset($_SESSION['user'])) {
+            header('Location: /login');
+            exit;
+        }
 
         if(isset($_POST['submit'])) {
 
             try {
                 $f = $_POST;
 
-                // TODO: Validation
-
                 $f['user_id'] = $_SESSION['user']['id'];
                 $id = Articles::save($f);
 
-                $pictureName = Upload::uploadFile($_FILES['picture'], $id);
-
-                Articles::attachPicture($id, $pictureName);
+                if (isset($_FILES['picture']) && !empty($_FILES['picture']['name'])) {
+                    $pictureName = Upload::uploadFile($_FILES['picture'], $id);
+                    Articles::attachPicture($id, $pictureName);
+                }
 
                 header('Location: /product/' . $id);
             } catch (\Exception $e){
