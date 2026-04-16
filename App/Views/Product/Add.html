@@ -18,46 +18,44 @@
     <div class="container mt-30">
         <form action="" method="post" enctype="multipart/form-data">
             <div class="row">
-                <div class="col-lg-6">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
                     <div class="u-form">
                         <div class="row">
                             <div class="col-lg-12">
                                 <div class="form-group">
-                                    <label for="e1">Titre</label>
-                                    <input type="text" name="name" class="form-control" id="e1"
+                                    <label for="product-name">Titre</label>
+                                    <input type="text" name="name" class="form-control" id="product-name"
                                            placeholder="Jeu de cartes (rare)">
                                 </div>
                             </div>
                             <div class="col-lg-12">
                                 <div class="form-group">
-                                    <label for="e2">Description</label>
-                                    <textarea class="form-control" name="description" id="e2" rows="3"></textarea>
+                                    <label for="product-description">Description</label>
+                                    <textarea class="form-control" name="description" id="product-description" rows="3"></textarea>
                                 </div>
                             </div>
 
                             <div class="col-lg-12">
                                 <div class="form-group">
-                                    <label for="e2">Ville</label>
-                                    <input class="form-control cityAutoComplete" type="text" autocomplete="off"/>
+                                    <label for="product-city">Ville</label>
+                                    <input class="form-control cityAutoComplete" id="product-city" type="text" autocomplete="off"/>
                                 </div>
                             </div>
 
                             <div class="col-lg-12">
                                 <div class="form-group">
-                                    <label for="e3">Image</label>
-                                    <input type="file" class="form-control" name="picture" id="e3" rows="3"/>
+                                    <label for="product-picture">Image</label>
+                                    <input type="file" class="form-control" name="picture" id="product-picture"/>
                                 </div>
                             </div>
                         </div>
                     </div>
 
                     <div class="u-area mt-small">
-                        <form action="#" method="post">
-                            <button name="submit" class="btn btn-primary u-btn">Valider</button>
-                        </form>
+                        <button name="submit" class="btn btn-primary u-btn">Valider</button>
                     </div>
                     <div class="u-terms">
-                        <p>En soumettant votre article vous acceptez les <a href="#">conditions générales</a> de Vide Grenier en
+                        <p>En soumettant votre article vous acceptez les <a href="#">conditions g&eacute;n&eacute;rales</a> de Vide Grenier en
                             ligne.</p>
                     </div>
                 </div>
