@@ -1,0 +1,49 @@
+services:
+  app_recette:
+    build:
+      context: .
+      dockerfile: docker/php/Dockerfile
+    container_name: vide-grenier-app-recette
+    depends_on:
+      db_recette:
+        condition: service_healthy
+    environment:
+      DB_HOST: db_recette
+      DB_NAME: videgrenierenligne_recette
+      DB_USER: videgrenier
+      DB_PASSWORD: videgrenier
+      APP_SHOW_ERRORS: "1"
+      COMPOSER_ALLOW_SUPERUSER: "1"
+    ports:
+      - "8081:80"
+    volumes:
+      - recette_storage:/var/www/html/public/storage
+      - recette_logs:/var/www/html/logs
+      - vendor_data_recette:/var/www/html/vendor
+
+  db_recette:
+    image: mysql:8.0
+    container_name: vide-grenier-db-recette
+    command: --default-authentication-plugin=mysql_native_password --character-set-server=utf8 --collation-server=utf8_general_ci
+    environment:
+      MYSQL_DATABASE: videgrenierenligne_recette
+      MYSQL_USER: videgrenier
+      MYSQL_PASSWORD: videgrenier
+      MYSQL_ROOT_PASSWORD: root
+    ports:
+      - "3308:3306"
+    volumes:
+      - db_data_recette:/var/lib/mysql
+      - ./sql/import.sql:/docker-entrypoint-initdb.d/01-import.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "mysqladmin ping -h 127.0.0.1 -u$$MYSQL_USER -p$$MYSQL_PASSWORD --silent"]
+      interval: 10s
+      timeout: 5s
+      retries: 20
+      start_period: 30s
+
+volumes:
+  db_data_recette:
+  recette_storage:
+  recette_logs:
+  vendor_data_recette:

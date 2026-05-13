@@ -4,68 +4,93 @@
 
 {% block body %}
 
-<div class="content-wrapper single-article mt-40">
-    <div class="container">
-        <div class="row">
-            <div class="col-lg-8 col-xs-12 col-sm-12">
-                <div class="preview-article">
-                    <img
-                            src="{{ ('/storage/' ~ article.picture) }}"/>
-
-                </div>
-                <h1><a href="#">{{article.name}}</a></h1>
-
-
-                <div class="author">
-                    <div class="author-head">
-                        <div class="sv-name">
-                            <div><a href="#">{{ article.username }}</a></div>
-                        </div>
+<div class="single-article">
+    <div class="content-wrapper mt-40">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-xs-12 col-sm-12">
+                    <div class="preview-article">
+                        <img src="{{ article.picture ? '/storage/' ~ article.picture : '/images/add-article.jpg' }}" alt="{{ article.name }}"/>
                     </div>
+                    <h1><a href="#">{{ article.name }}</a></h1>
 
-                    <div class="author-border"></div>
-                    <div class="sv-views">
-                        <div class="sv-views-count">
-                            {{ article.views }} vues
-                        </div>
-                    </div>
-                    <div class="clearfix"></div>
-                </div>
-                <div class="info">
-                    <div class="info-content">
-                        <h4>Description:</h4>
-                        <p>{{article.description}}</p>
-                    </div>
-                    <div class="u-area mt-small">
-
-                    <a name="submit" href="mailto:{{article.email}}" class="btn btn-primary u-btn">Contacter {{article
-                        .username}}</a>
-
-                    </div>
-                </div>
-            </div>
-
-            <!-- right column -->
-            <div class="col-lg-4 col-xs-12 col-sm-12 hidden-xs">
-                <p>Vous aimerez peut-être...</p>
-                <div class="list">
-                    <div class="h-article row">
-                        {% for suggestion in suggestions %}
-                        <div class="col-lg-12 col-sm-12">
-                            <div class="v-desc">
-                                <a href="{{ ('/product/' ~ suggestion.id) }}">{{suggestion.name}}</a>
+                    <div class="author">
+                        <div class="author-head">
+                            <div class="sv-name">
+                                <div><a href="#">{{ article.username }}</a></div>
                             </div>
-
-                            <div class="v-views">
-                                {{ suggestion.views}} vues
-                            </div>
-
-                            <hr>
                         </div>
-                        {% endfor %}
+
+                        <div class="author-border"></div>
+                        <div class="sv-views">
+                            <div class="sv-views-count">
+                                {{ article.views }} vues
+                            </div>
+                        </div>
+                        <div class="clearfix"></div>
+                    </div>
+                    <div class="info">
+                        <div class="info-content">
+                            <h4>Description :</h4>
+                            <p>{{ article.description }}</p>
+                        </div>
+                        <div class="u-area mt-small contact-seller">
+                            {% if contactSent %}
+                                <div class="alert alert-success" role="alert">
+                                    Votre message a bien &eacute;t&eacute; transmis au propri&eacute;taire.
+                                </div>
+                            {% endif %}
+
+                            <form method="post" action="">
+                                <h4>Contacter {{ article.username }}</h4>
+                                <div class="form-group">
+                                    <label for="contact-name">Votre nom</label>
+                                    <input type="text" class="form-control" id="contact-name" name="contact_name" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="contact-email">Votre email</label>
+                                    <input type="email" class="form-control" id="contact-email" name="contact_email" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="contact-message">Message</label>
+                                    <textarea class="form-control" id="contact-message" name="contact_message" rows="4" required></textarea>
+                                </div>
+                                <button type="submit" name="contact_submit" class="btn btn-primary u-btn">Envoyer</button>
+                            </form>
+                        </div>
                     </div>
                 </div>
-                <!-- END up next -->
+
+                <div class="col-lg-4 col-xs-12 col-sm-12">
+                    <div class="content-block similar-videos">
+                        <div class="cb-header">
+                            <span>Vous aimerez peut-&ecirc;tre...</span>
+                        </div>
+                        <div class="list">
+                            {% for suggestion in suggestions %}
+                                {% if suggestion.id != article.id %}
+                                <div class="h-article row">
+                                    <div class="col-xs-6">
+                                        <div class="v-img">
+                                            <a href="{{ '/product/' ~ suggestion.id }}">
+                                                <img src="{{ suggestion.picture ? '/storage/' ~ suggestion.picture : '/images/add-article.jpg' }}" alt="{{ suggestion.name }}">
+                                            </a>
+                                        </div>
+                                    </div>
+                                    <div class="col-xs-6">
+                                        <div class="v-desc">
+                                            <a href="{{ '/product/' ~ suggestion.id }}">{{ suggestion.name }}</a>
+                                        </div>
+                                        <div class="v-views">
+                                            {{ suggestion.views }} vues
+                                        </div>
+                                    </div>
+                                </div>
+                                {% endif %}
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>

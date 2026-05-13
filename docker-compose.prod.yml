@@ -1,0 +1,49 @@
+services:
+  app_prod:
+    build:
+      context: .
+      dockerfile: docker/php/Dockerfile
+    container_name: vide-grenier-app-prod
+    depends_on:
+      db_prod:
+        condition: service_healthy
+    environment:
+      DB_HOST: db_prod
+      DB_NAME: videgrenierenligne_prod
+      DB_USER: videgrenier
+      DB_PASSWORD: videgrenier
+      APP_SHOW_ERRORS: "0"
+      COMPOSER_ALLOW_SUPERUSER: "1"
+    ports:
+      - "8082:80"
+    volumes:
+      - prod_storage:/var/www/html/public/storage
+      - prod_logs:/var/www/html/logs
+      - vendor_data_prod:/var/www/html/vendor
+
+  db_prod:
+    image: mysql:8.0
+    container_name: vide-grenier-db-prod
+    command: --default-authentication-plugin=mysql_native_password --character-set-server=utf8 --collation-server=utf8_general_ci
+    environment:
+      MYSQL_DATABASE: videgrenierenligne_prod
+      MYSQL_USER: videgrenier
+      MYSQL_PASSWORD: videgrenier
+      MYSQL_ROOT_PASSWORD: root
+    ports:
+      - "3309:3306"
+    volumes:
+      - db_data_prod:/var/lib/mysql
+      - ./sql/import.sql:/docker-entrypoint-initdb.d/01-import.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "mysqladmin ping -h 127.0.0.1 -u$$MYSQL_USER -p$$MYSQL_PASSWORD --silent"]
+      interval: 10s
+      timeout: 5s
+      retries: 20
+      start_period: 30s
+
+volumes:
+  db_data_prod:
+  prod_storage:
+  prod_logs:
+  vendor_data_prod:

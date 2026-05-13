@@ -62,8 +62,14 @@ docker compose up --build
 - `/api/products`
 - `/api/cities?query=Par`
 
+## Tests rapides
+
+```bash
+docker compose exec app composer test:unit
+docker compose exec app composer test:integration
+```
+
 ## Limites actuelles connues
 
-- Le flux d'inscription ne connecte pas automatiquement l'utilisateur.
-- Le tri "Recent" du front envoie `sort=date`, alors que le modele attend actuellement `data`.
 - Les fonctions de modification et suppression ne sont pas implementees dans le code actuel.
+- Le formulaire de contact confirme la demande cote application; l'envoi email SMTP n'est pas branche.

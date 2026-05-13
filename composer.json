@@ -1,4 +1,5 @@
 {
+    "license": "MIT",
     "require": {
         "twig/twig": "~3.0",
       "ext-pdo": "*",
@@ -9,5 +10,10 @@
             "Core\\": "Core/",
             "App\\": "App/"
         }
+    },
+    "scripts": {
+        "test": "php tests/unit.php",
+        "test:unit": "php tests/unit.php",
+        "test:integration": "php tests/integration.php"
     }
 }
