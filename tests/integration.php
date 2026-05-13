@@ -3,7 +3,7 @@
 require __DIR__ . '/TestRunner.php';
 
 $runner = new TestRunner();
-$baseUrl = rtrim(getenv('APP_BASE_URL') ?: 'http://localhost:8080', '/');
+$baseUrl = rtrim(getenv('APP_BASE_URL') ?: 'http://localhost', '/');
 
 function http_request($method, $path, $body = null)
 {
