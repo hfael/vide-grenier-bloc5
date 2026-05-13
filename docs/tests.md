@@ -1,56 +1,68 @@
-# Plan de tests – Vide Grenier En Ligne
+# Plan de tests - Vide Grenier En Ligne
 
-## 1. Tests d’authentification
+## Objectif
 
-### Inscription utilisateur
-- Accès à la page /register
-- Saisie des champs requis
-- Validation du formulaire
-- Vérification de la création du compte
-- Vérification de la connexion automatique après inscription
+Ce document couvre les tests unitaires et les tests d'integration attendus pour la recette.
+Les tests sont volontairement simples afin d'etre executables pendant la soutenance.
 
-### Connexion utilisateur
-- Accès à la page /login
-- Saisie email / mot de passe valides
-- Vérification redirection vers /account
+## Commandes
 
-### Refus connexion invalide
-- Saisie mauvais mot de passe
-- Vérification absence de redirection compte
+Demarrer l'environnement de developpement:
 
-### Fonction "Se souvenir de moi"
-- Connexion avec case cochée
-- Vérification persistance session navigateur
+```bash
+docker compose up -d --build
+```
 
-## 2. Tests annonces
+Lancer les tests unitaires:
 
-### Création annonce avec image
-- Connexion utilisateur
-- Création annonce avec image
-- Vérification affichage image produit
+```bash
+docker compose exec app composer test:unit
+```
 
-### Création annonce sans image
-- Connexion utilisateur
-- Création annonce sans image
-- Vérification absence d’erreur
+Lancer les tests d'integration HTTP:
 
-## 3. Tests sécurité
+```bash
+docker compose exec app composer test:integration
+```
 
-### Protection espace compte
-- Accès /account sans session
-- Vérification redirection /login
+Tester la recette:
 
-### Protection dépôt annonce
-- Accès /product sans session
-- Vérification redirection /login
+```bash
+docker compose -f docker-compose.recette.yml up -d --build
+docker compose -f docker-compose.recette.yml exec app_recette sh -lc "APP_BASE_URL=http://localhost composer test:integration"
+```
 
-## 4. Tests affichage produit
+Tester la production:
 
-### Affichage fiche produit
-- Vérification :
-  - image
-  - description
-  - nombre de vues
+```bash
+docker compose -f docker-compose.prod.yml up -d --build
+docker compose -f docker-compose.prod.yml exec app_prod sh -lc "APP_BASE_URL=http://localhost composer test:integration"
+```
 
-### Contact vendeur
-- Vérification affichage email vendeur intégré à la fiche
+## Tests unitaires automatises
+
+| Test | Donnee | Resultat attendu |
+| --- | --- | --- |
+| Hash deterministe | `secret` + `salt` | Le hash a toujours la meme valeur et contient 64 caracteres. |
+| Generation de salt | longueur `32` | Le salt genere contient 32 caracteres. |
+| Validation upload image | `annonce.JPG`, 120 Ko | Le fichier est accepte. |
+| Extension interdite | `script.php` | Une exception est levee. |
+| Fichier trop lourd | `photo.png`, 5 Mo | Une exception est levee. |
+
+## Tests d'integration automatises
+
+| Test | Jeu de donnees | Resultat attendu |
+| --- | --- | --- |
+| API produits | base importee depuis `sql/import.sql` | `/api/products?sort=date` retourne HTTP 200 et un tableau JSON d'annonces. |
+| Fiche produit | annonce `id=1` | `/product/1` affiche un formulaire de contact et ne contient plus de lien `mailto:`. |
+| Contact vendeur | POST sur `/product/1` avec nom, email, message | La fiche reste disponible en HTTP 200 et affiche le message de confirmation. |
+
+## Tests manuels de non-regression
+
+1. Creer un compte depuis `/register`.
+2. Verifier la redirection automatique vers `/account`.
+3. Se deconnecter puis se reconnecter avec "Se souvenir de moi".
+4. Deposer une annonce avec image.
+5. Deposer une annonce sans image.
+6. Ouvrir la fiche produit et envoyer un message via le formulaire de contact.
+7. Verifier que le tri "Recent" de l'accueil fonctionne.
