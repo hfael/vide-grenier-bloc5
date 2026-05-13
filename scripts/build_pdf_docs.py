@@ -1,7 +1,7 @@
 from pathlib import Path
 from reportlab.lib.pagesizes import A4
 from reportlab.lib.styles import getSampleStyleSheet
-from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer
+from reportlab.platypus import Image, SimpleDocTemplate, Paragraph, Spacer
 
 
 DOCS = [
@@ -32,6 +32,9 @@ def markdown_to_paragraphs(text):
             yield ("title", raw[2:])
         elif raw.startswith("## "):
             yield ("heading", raw[3:])
+        elif raw.startswith("![") and "](" in raw and raw.endswith(")"):
+            image_path = raw.split("](", 1)[1][:-1]
+            yield ("image", image_path)
         elif raw.startswith("- "):
             yield ("body", "* " + raw[2:])
         elif raw[0:2].isdigit() and ". " in raw[:4]:
@@ -55,6 +58,11 @@ def build_pdf(source, target):
             story.append(Spacer(1, 8))
         elif kind == "code":
             story.append(Paragraph("<font name='Courier'>" + value + "</font>", styles["Code"]))
+        elif kind == "image":
+            image_file = source.parent / value
+            if image_file.exists():
+                story.append(Image(str(image_file), width=460, height=300, kind="proportional"))
+                story.append(Spacer(1, 10))
         else:
             story.append(Paragraph(value, styles["BodyText"]))
             story.append(Spacer(1, 4))

@@ -10,7 +10,7 @@ Ouvrir l'adresse de l'environnement:
 
 La page d'accueil presente les annonces disponibles.
 
-Capture a integrer dans le PDF: page d'accueil avec la liste des annonces.
+![Capture accueil](assets/accueil.png)
 
 ## 2. Creer un compte
 
@@ -22,7 +22,7 @@ Capture a integrer dans le PDF: page d'accueil avec la liste des annonces.
 
 Resultat attendu: l'utilisateur est connecte automatiquement et arrive sur la page `Mon compte`.
 
-Capture a integrer dans le PDF: formulaire d'inscription rempli.
+![Capture inscription](assets/inscription.png)
 
 ## 3. Se connecter
 
@@ -45,7 +45,7 @@ Resultat attendu: l'utilisateur est redirige vers `Mon compte`.
 
 L'image est optionnelle. Si aucune image n'est envoyee, le site affiche une image par defaut.
 
-Capture a integrer dans le PDF: formulaire de depot d'annonce avec le champ image laisse vide.
+![Capture depot annonce](assets/depot-annonce.png)
 
 ## 5. Contacter un proprietaire
 
@@ -57,7 +57,7 @@ Capture a integrer dans le PDF: formulaire de depot d'annonce avec le champ imag
 Resultat attendu: la fiche produit reste ouverte et un message de confirmation apparait.
 Le navigateur n'ouvre plus la messagerie locale.
 
-Capture a integrer dans le PDF: formulaire de contact et message de confirmation.
+![Capture contact](assets/contact-confirmation.png)
 
 ## 6. Se deconnecter
 
