@@ -43,6 +43,7 @@ Voir [docs/tests.md](docs/tests.md).
 - [Mise en production](docs/mise_en_production.md)
 - [Guide utilisateur](docs/guide_utilisateur.md)
 - [Release notes](docs/release_notes.md)
+- [Suivi GitFlow et issues](docs/gitflow.md)
 
 Des versions PDF sont disponibles dans `docs/pdf/`.
 
