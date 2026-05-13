@@ -85,8 +85,7 @@ La base importee depuis [`sql/import.sql`](../sql/import.sql) repose principalem
 3. `User::registerAction` verifie la confirmation puis appelle `User::register()`.
 4. Le mot de passe est sale et hashe via `App\Utility\Hash`.
 5. `App\Models\User::createUser()` insere l'utilisateur en base.
-
-Note: le flux ne connecte pas automatiquement l'utilisateur apres inscription.
+6. L'utilisateur est connecte automatiquement puis redirige vers `/account`.
 
 ### 3. Se connecter
 
@@ -121,7 +120,7 @@ Note: le flux ne connecte pas automatiquement l'utilisateur apres inscription.
 2. `Product::showAction` incremente le compteur avec `Articles::addOneView()`.
 3. L'article complet est charge avec son proprietaire via `Articles::getOne()`.
 4. Des suggestions sont chargees via `Articles::getSuggest()`.
-5. La page affiche l'image, la description, le compteur de vues et un lien `mailto:` vers le proprietaire.
+5. La page affiche l'image, la description, le compteur de vues et un formulaire de contact integre.
 
 ### 7. Se deconnecter
 
@@ -197,6 +196,5 @@ Roles des repertoires:
 ## Points d'attention pour la maintenance
 
 - La gestion de session est volontairement simple et ne repose pas sur un middleware dedie.
-- Plusieurs commentaires `TODO` signalent l'absence de validation metier et de gestion d'erreurs utilisateur.
-- Le filtrage "Recent" de l'accueil appelle `sort=date`, alors que `Articles::getAll()` traite actuellement la valeur `data`.
 - L'upload d'image est ecrit directement dans `public/storage/`, ce qui simplifie l'affichage mais melange stockage applicatif et exposition web.
+- Le formulaire de contact affiche une confirmation cote application; l'envoi email reel pourra etre branche ensuite sur un SMTP.

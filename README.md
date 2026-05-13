@@ -1,48 +1,64 @@
-# Vide Grenier en Ligne
+# Vide Grenier En Ligne
 
-Ce Readme.md est à destination des futurs repreneurs du site-web Vide Grenier en Ligne.
+Application PHP MVC de depot et consultation d'annonces gratuites.
 
-## Mise en place du projet back-end
+## Demarrage rapide
 
-1. Créez un VirtualHost pointant vers le dossier /public du site web (Apache)
-2. Importez la base de données MySQL (sql/import.sql)
-3. Connectez le projet et la base de données via les fichiers de configuration
-4. Lancez la commande `composer install` pour les dépendances
-
-## Mise en place du projet front-end
-1. Lancez la commande `npm install` pour installer node-sass
-2. Lancez la commande `npm run watch` pour compiler les fichiers SCSS
-
-## Routing
-
-Le [Router](Core/Router.php) traduit les URLs. 
-
-Les routes sont ajoutées via la méthode `add`. 
-
-En plus des **controllers** et **actions**, vous pouvez spécifier un paramètre comme pour la route suivante:
-
-```php
-$router->add('product/{id:\d+}', ['controller' => 'Product', 'action' => 'show']);
+```bash
+docker compose up -d --build
 ```
 
+Acces:
 
-## Vues
+- Application: `http://localhost:8080`
+- MySQL: `localhost:3307`
+- Base: `videgrenierenligne`
+- Utilisateur: `videgrenier`
+- Mot de passe: `videgrenier`
 
-Les vues sont rendues grâce à **Twig**. 
-Vous les retrouverez dans le dossier `App/Views`. 
+## Environnements
 
-```php
-View::renderTemplate('Home/index.html', [
-    'name'    => 'Toto',
-    'colours' => ['rouge', 'bleu', 'vert']
-]);
+| Environnement | Commande | Application | MySQL |
+| --- | --- | --- | --- |
+| Developpement | `docker compose up -d --build` | `http://localhost:8080` | `3307` |
+| Recette | `docker compose -f docker-compose.recette.yml up -d --build` | `http://localhost:8081` | `3308` |
+| Production | `docker compose -f docker-compose.prod.yml up -d --build` | `http://localhost:8082` | `3309` |
+
+Les trois environnements peuvent tourner en meme temps.
+
+## Tests
+
+```bash
+docker compose exec app composer test:unit
+docker compose exec app composer test:integration
 ```
-## Models
 
-Les modèles sont utilisés pour récupérer ou stocker des données dans l'application. Les modèles héritent de `Core
-\Model
-` et utilisent [PDO](http://php.net/manual/en/book.pdo.php) pour l'accès à la base de données. 
+Voir [docs/tests.md](docs/tests.md).
 
-```php
-$db = static::getDB();
-```
+## Documentation
+
+- [Architecture](docs/architecture.md)
+- [Developpement](docs/dev_setup.md)
+- [Recette](docs/recette.md)
+- [Mise en production](docs/mise_en_production.md)
+- [Guide utilisateur](docs/guide_utilisateur.md)
+- [Release notes](docs/release_notes.md)
+
+Des versions PDF sont disponibles dans `docs/pdf/`.
+
+## GitFlow
+
+- `dev`: corrections et evolutions.
+- `recette`: validation avant production.
+- `main`: version de production.
+
+La reprise a ete tracee avec des issues GitHub pour les bugs client et les livrables de deploiement.
+
+## Points corriges dans la version 1.1.0
+
+- Creation d'annonce possible sans image.
+- Connexion automatique apres inscription.
+- Option `Se souvenir de moi` fonctionnelle.
+- Formulaire de contact integre sur la fiche produit.
+- Tests unitaires et tests d'integration.
+- Environnements Docker developpement, recette et production.
