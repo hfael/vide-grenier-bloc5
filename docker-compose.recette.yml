@@ -17,7 +17,8 @@ services:
     ports:
       - "8081:80"
     volumes:
-      - ./:/var/www/html
+      - recette_storage:/var/www/html/public/storage
+      - recette_logs:/var/www/html/logs
       - vendor_data_recette:/var/www/html/vendor
 
   db_recette:
@@ -43,4 +44,6 @@ services:
 
 volumes:
   db_data_recette:
+  recette_storage:
+  recette_logs:
   vendor_data_recette:
