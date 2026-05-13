@@ -19,7 +19,7 @@ class Articles extends Model {
      * @return string|boolean
      * @throws Exception
      */
-    public static function getAll($filter) {
+    public static function getAll($filter = '') {
         $db = static::getDB();
 
         $query = 'SELECT * FROM articles ';
@@ -28,10 +28,12 @@ class Articles extends Model {
             case 'views':
                 $query .= ' ORDER BY articles.views DESC';
                 break;
+            case 'date':
             case 'data':
                 $query .= ' ORDER BY articles.published_date DESC';
                 break;
             case '':
+                $query .= ' ORDER BY articles.published_date DESC';
                 break;
         }
 

@@ -16,6 +16,9 @@
     <!-- ///channel -->
 
     <div class="container mt-30">
+        {% if error is defined %}
+        <div class="alert alert-danger" role="alert">{{ error }}</div>
+        {% endif %}
         <form action="" method="post" enctype="multipart/form-data">
             <div class="row">
                 <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
@@ -25,13 +28,13 @@
                                 <div class="form-group">
                                     <label for="product-name">Titre</label>
                                     <input type="text" name="name" class="form-control" id="product-name"
-                                           placeholder="Jeu de cartes (rare)">
+                                           placeholder="Jeu de cartes (rare)" required>
                                 </div>
                             </div>
                             <div class="col-lg-12">
                                 <div class="form-group">
                                     <label for="product-description">Description</label>
-                                    <textarea class="form-control" name="description" id="product-description" rows="3"></textarea>
+                                    <textarea class="form-control" name="description" id="product-description" rows="3" required></textarea>
                                 </div>
                             </div>
 
@@ -46,6 +49,7 @@
                                 <div class="form-group">
                                     <label for="product-picture">Image</label>
                                     <input type="file" class="form-control" name="picture" id="product-picture"/>
+                                    <p class="help-block">Optionnel, JPEG ou PNG, 4 Mo maximum.</p>
                                 </div>
                             </div>
                         </div>

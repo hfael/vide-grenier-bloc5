@@ -2,21 +2,17 @@
 
 namespace App\Controllers;
 
-use App\Config;
-use App\Model\UserRegister;
 use App\Models\Articles;
 use App\Utility\Hash;
-use App\Utility\Session;
 use \Core\View;
 use Exception;
-use http\Env\Request;
-use http\Exception\InvalidArgumentException;
 
 /**
  * User controller
  */
 class User extends \Core\Controller
 {
+    private const REMEMBER_ME_SECONDS = 2592000; // 30 jours
 
     /**
      * Affiche la page de login
@@ -24,44 +20,48 @@ class User extends \Core\Controller
     public function loginAction()
     {
         if (isset($_POST['submit'])) {
-            $f = $_POST;
-
-            $loginSuccess = $this->login($f);
+            $loginSuccess = $this->login($_POST);
 
             if ($loginSuccess) {
                 header('Location: /account');
                 exit;
             }
+
+            View::renderTemplate('User/login.html', [
+                'error' => 'Identifiants invalides.'
+            ]);
+            return;
         }
 
         View::renderTemplate('User/login.html');
     }
 
     /**
-     * Page de création de compte
+     * Page de creation de compte
      */
     public function registerAction()
     {
-        if(isset($_POST['submit'])){
-            $f = $_POST;
+        if (isset($_POST['submit'])) {
+            $data = $_POST;
 
-            if ($f['password'] !== $f['password-check']) {
-                View::renderTemplate('User/register.html');
+            if (($data['password'] ?? '') !== ($data['password-check'] ?? '')) {
+                View::renderTemplate('User/register.html', [
+                    'error' => 'Les mots de passe ne correspondent pas.'
+                ]);
                 return;
             }
 
-            // validation
+            $userID = $this->register($data);
 
-            $userID = $this->register($f);
-
-            if ($userID) {
-                $loginSuccess = $this->login($f);
-
-                if ($loginSuccess) {
-                    header('Location: /account');
-                    exit;
-                }
+            if ($userID && $this->login($data)) {
+                header('Location: /account');
+                exit;
             }
+
+            View::renderTemplate('User/register.html', [
+                'error' => 'Impossible de creer le compte avec ces informations.'
+            ]);
+            return;
         }
 
         View::renderTemplate('User/register.html');
@@ -84,91 +84,89 @@ class User extends \Core\Controller
         ]);
     }
 
-    /*
-     * Fonction privée pour enregister un utilisateur
-     */
     private function register($data)
     {
         try {
-            // Generate a salt, which will be applied to the during the password
-            // hashing process.
             $salt = Hash::generateSalt(32);
 
-            $userID = \App\Models\User::createUser([
-                "email" => $data['email'],
-                "username" => $data['username'],
-                "password" => Hash::generate($data['password'], $salt),
-                "salt" => $salt
+            return \App\Models\User::createUser([
+                'email' => $data['email'],
+                'username' => $data['username'],
+                'password' => Hash::generate($data['password'], $salt),
+                'salt' => $salt
             ]);
-
-            return $userID;
-
         } catch (Exception $ex) {
-            // TODO : Set flash if error : utiliser la fonction en dessous
-            /* Utility\Flash::danger($ex->getMessage());*/
+            return null;
         }
     }
 
-    private function login($data){
+    private function login($data)
+    {
         try {
-            if(!isset($data['email'])){
-                throw new Exception('TODO');
+            if (!isset($data['email'], $data['password'])) {
+                return false;
             }
 
             $user = \App\Models\User::getByLogin($data['email']);
+
+            if (!$user) {
+                return false;
+            }
 
             if (Hash::generate($data['password'], $user['salt']) !== $user['password']) {
                 return false;
             }
 
-            if (isset($data['remember_me'])) {
-                session_set_cookie_params(60 * 60 * 24 * 30);
-            }
-            $_SESSION['user'] = array(
+            $_SESSION['user'] = [
                 'id' => $user['id'],
                 'username' => $user['username'],
-            );
+            ];
+
+            if (isset($data['remember_me'])) {
+                $this->rememberCurrentSession();
+            }
 
             return true;
-
         } catch (Exception $ex) {
-            // TODO : Set flash if error
-            /* Utility\Flash::danger($ex->getMessage());*/
+            return false;
         }
     }
 
+    private function rememberCurrentSession()
+    {
+        if (!session_id()) {
+            return;
+        }
+
+        $params = session_get_cookie_params();
+        setcookie(session_name(), session_id(), [
+            'expires' => time() + self::REMEMBER_ME_SECONDS,
+            'path' => $params['path'] ?: '/',
+            'domain' => $params['domain'],
+            'secure' => (bool) $params['secure'],
+            'httponly' => (bool) $params['httponly'],
+            'samesite' => $params['samesite'] ?? 'Lax'
+        ]);
+    }
 
     /**
-     * Logout: Delete cookie and session. Returns true if everything is okay,
-     * otherwise turns false.
-     * @access public
-     * @return boolean
-     * @since 1.0.2
+     * Logout: Delete cookie and session.
      */
-    public function logoutAction() {
+    public function logoutAction()
+    {
+        $_SESSION = [];
 
-        /*
-        if (isset($_COOKIE[$cookie])){
-            // TODO: Delete the users remember me cookie if one has been stored.
-            // https://github.com/andrewdyer/php-mvc-register-login/blob/development/www/app/Model/UserLogin.php#L148
-        }*/
-        // Destroy all data registered to the session.
-
-        $_SESSION = array();
-
-        if (ini_get("session.use_cookies")) {
+        if (ini_get('session.use_cookies')) {
             $params = session_get_cookie_params();
             setcookie(session_name(), '', time() - 42000,
-                $params["path"], $params["domain"],
-                $params["secure"], $params["httponly"]
+                $params['path'], $params['domain'],
+                $params['secure'], $params['httponly']
             );
         }
 
         session_destroy();
 
-        header ("Location: /");
-
+        header('Location: /');
         return true;
     }
-
 }

@@ -20,7 +20,7 @@ class Api extends \Core\Controller
      */
     public function ProductsAction()
     {
-        $query = $_GET['sort'];
+        $query = $_GET['sort'] ?? '';
 
         $articles = Articles::getAll($query);
 
@@ -35,7 +35,7 @@ class Api extends \Core\Controller
      */
     public function CitiesAction(){
 
-        $cities = Cities::search($_GET['query']);
+        $cities = Cities::search($_GET['query'] ?? '');
 
         header('Content-Type: application/json');
         echo json_encode($cities);
