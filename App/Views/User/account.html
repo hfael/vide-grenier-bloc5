@@ -1,79 +1,60 @@
 {% extends "base.html" %}
 
-{% block title %}Mon compte {% endblock %}
+{% block title %}Mon compte{% endblock %}
 
 {% block body %}
+<main class="bg-gray-50 min-h-screen py-12">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
-<div class="channel">
-
-    <div class="container-fluid account-header">
-        <div class="row">
-            <h1>
-                {{ user.username }}
-            </h1>
-
+        <!-- Header -->
+        <div class="mb-12">
+            <h1 class="text-4xl font-bold text-gray-900 mb-2">Mon compte</h1>
+            <p class="text-gray-600">Bienvenue, {{ user.username }}!</p>
         </div>
-    </div>
 
+        <!-- Actions -->
+        <div class="mb-8">
+            <a href="/product" class="inline-block bg-red-500 hover:bg-red-600 text-white font-bold py-3 px-6 rounded-lg transition">
+                + Déposer une nouvelle annonce
+            </a>
+        </div>
 
-    <div class="content-wrapper">
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-12">
-                    <div class="channel-details">
-                        <div class="row">
-                            <div class="col-lg-10 col-lg-offset-2 col-xs-12">
-                                <div class="c-details">
-
-                                </div>
-                            </div>
+        <!-- My Products -->
+        {% if articles %}
+        <div>
+            <h2 class="text-2xl font-bold text-gray-900 mb-8">Mes annonces</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                {% for article in articles %}
+                <div class="bg-white rounded-lg shadow hover:shadow-lg transition-shadow overflow-hidden">
+                    <a href="/product/{{ article.id }}" class="block">
+                        <div class="overflow-hidden bg-gray-200 h-48">
+                            <img src="{{ article.picture ? '/storage/' ~ article.picture : '/images/add-article.jpg' }}"
+                                alt="{{ article.name }}" class="w-full h-full object-cover hover:scale-105 transition-transform">
+                        </div>
+                    </a>
+                    <div class="p-4">
+                        <a href="/product/{{ article.id }}" class="block">
+                            <h3 class="text-lg font-semibold text-gray-900 hover:text-red-500 mb-2">{{ article.name }}</h3>
+                        </a>
+                        <p class="text-gray-600 text-sm mb-3">{{ article.description[:100] }}...</p>
+                        <div class="flex justify-between items-center">
+                            <span class="text-gray-500 text-xs">{{ article.views }} vues</span>
+                            <a href="/product/{{ article.id }}" class="text-red-500 hover:text-red-600 text-sm font-semibold">Voir →</a>
                         </div>
                     </div>
-                    <!-- Featured Videos -->
-                    <div class="content-block">
-                        <div class="cb-header">
-                            <div class="row">
-                                <div class="col-lg-8 col-xs-6">
-                                    <div class="btn-group bg-clean">
-                                        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                            Plus récent <span class="caret"></span>
-                                        </button>
-                                        <ul class="dropdown-menu">
-                                            <li><a href="#"><i class="cv cvicon-cv-relevant"></i> Popularité</a></li>
-                                            <li><a href="#"><i class="cv cvicon-cv-calender"></i> Plus récent</a></li>
-                                        </ul>
-                                    </div>
-                                    <div class="clearfix"></div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="cb-content articlelist">
-                            <div class="row">
-                                {% for article in articles %}
-                                <div class=" col-lg-3 col-sm-6 articleitem">
-                                    <div class="b-article">
-                                        <div class="v-img">
-                                            <a
-                                                    href="{{ ('/product/' ~ article.id) }}"><img
-                                                    src="{{ article.picture ? '/storage/' ~ article.picture : '/images/add-article.jpg' }}" alt="{{ article.name }}"></a>
-                                        </div>
-                                        <div class="v-desc">
-                                            <a href="{{ ('/product/' ~ article.id) }}">{{ article.name }}</a>
-                                        </div>
-                                        <div class="v-views">
-                                            {{article.views}} vues
-                                        </div>
-                                    </div>
-                                </div>
-                                {% endfor %}
-                            </div>
-                        </div>
-                    </div>
-                    <!-- /Featured Videos -->
                 </div>
+                {% endfor %}
             </div>
         </div>
-    </div>
-</div>
+        {% else %}
+        <div class="bg-white rounded-lg shadow p-8 text-center">
+            <p class="text-gray-600 mb-4">Vous n'avez pas encore d'annonces.</p>
+            <a href="/product" class="inline-block bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded-lg transition">
+                Créer une annonce
+            </a>
+        </div>
+        {% endif %}
 
+    </div>
+</main>
 {% endblock %}

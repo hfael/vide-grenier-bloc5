@@ -4,188 +4,100 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
     <meta name="description" content="">
     <meta name="author" content="">
     <link rel="icon" href="/favicon.png">
 
     <title>Vide Grenier En Ligne | {% block title %}{% endblock %}</title>
 
-    <!-- Bootstrap core CSS -->
-    <link href="/bootstrap/css/bootstrap.min.css" rel="stylesheet">
-
-    <!-- Theme CSS -->
+    <!-- Tailwind CSS -->
     <link href="/style/main.css" rel="stylesheet">
     <link href="/css/font-awesome.min.css" rel="stylesheet">
-    <link href="/css/font-circle-video.css" rel="stylesheet">
-
-    <!-- font-family: 'Hind', sans-serif; -->
     <link href='https://fonts.googleapis.com/css?family=Hind:400,300,500,600,700|Hind+Guntur:300,400,500,700' rel='stylesheet' type='text/css'>
 
 </head>
-<body>
-<!-- logo, menu, search, avatar -->
-<div class="container-fluid ">
-    <div class="row">
-        <div class="navbar-container">
-            <div class="container">
-                <div class="row">
-                    <div class="col-xs-3 visible-xs">
-                        <a href="#" class="btn-menu-toggle"><i class="cv cvicon-cv-menu"></i></a>
-                    </div>
-                    <div class="col-lg-1 col-sm-2 col-xs-6">
-                        <a class="navbar-brand" href="/">
-                            <img src="/images/logo.png" alt="Vide Grenier en ligne" class="logo" />
-                            <span>Vide Grenier en ligne</span>
-                        </a>
-                    </div>
-                    <div class="col-lg-3 col-sm-10 hidden-xs">
-                        <ul class="list-inline menu">
-                            <li class="color-active"><a href="/product">Déposer une annonce</a></li>
-                        </ul>
-                    </div>
+<body class="bg-white text-gray-900">
 
-                    <div class="col-lg-6 col-sm-8 col-xs-3">
-                        <!--<form action="search.html" method="post">
-                            <div class="topsearch">
-                                <i class="cv cvicon-cv-cancel topsearch-close"></i>
-                                <div class="input-group">
-                                    <span class="input-group-addon" id="sizing-addon2"><i class="fa fa-search"></i></span>
-                                    <input type="text" class="form-control" placeholder="Rechercher..."
-                                           aria-describedby="sizing-addon2">
-                                </div>
-                            </div>
-                        </form>-->
-                    </div>
-
-                    {% if user is not null %}
-
-                    <div class="col-lg-2 col-sm-4 hidden-xs">
-                        <div class="selectuser pull-left">
-                            <div class="btn-group pull-right dropdown">
-                                <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-                                    {{ user.username }}
-                                    <span class="caret"></span>
-                                </button>
-                                <ul class="dropdown-menu">
-                                    <li><a href="/account">Mon compte</a></li>
-                                    <li><a href="/logout">Déconnexion</a></li>
-                                </ul>
-                            </div>
-                        </div>
-                        <div class="clearfix"></div>
-                    </div>
-
-                    {% else %}
-                    <div class="col-lg-2 col-sm-12 hidden-xs">
-                        <div class="loginsignup pull-right">
-                            <a href="/login">Connexion</a> . <a href="/register">Inscription</a>
-                        </div>
-                        <div class="clearfix"></div>
-                    </div>
-
-                    {%endif %}
-                </div>
+<!-- Navbar -->
+<nav class="border-b border-gray-200 bg-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex justify-between items-center h-16">
+            <!-- Logo -->
+            <div class="flex-shrink-0 flex items-center">
+                <a href="/" class="flex items-center">
+                    <img src="/images/logo.png" alt="Logo" class="h-10 w-10">
+                    <span class="ml-2 text-lg font-semibold hidden sm:inline">Vide Grenier en ligne</span>
+                </a>
             </div>
-        </div>
-    </div>
-</div>
-<!-- /logo -->
 
-<div class="mobile-menu">
-    <div class="mobile-menu-head">
-        <a href="#" class="mobile-menu-close"></a>
-        <a class="navbar-brand" href="/">
-            <img src="/images/logo.png" alt="Vide Grenier en ligne" class="logo" />
-            <span>Vide Grenier en ligne</span>
-        </a>
-    </div>
-    <div class="mobile-menu-content">
-        <a href="/product" class="btn mobile-menu-upload">
-            <span>Déposer une annonce</span>
-        </a>
+            <!-- Menu Desktop -->
+            <div class="hidden sm:flex items-center space-x-8">
+                <a href="/product" class="text-red-500 hover:text-red-600 font-medium">Déposer une annonce</a>
+            </div>
 
-        <div class="mobile-menu-list">
-            <ul>
-                <li>
-                    <a href="/">
-                        <i class="cv cvicon-cv-playlist"></i>
-                        <p>Accueil</p>
-                    </a>
-                </li>
+            <!-- User Menu -->
+            <div class="flex items-center space-x-4">
                 {% if user is not null %}
-                <li>
-                    <a href="/account">
-                        <i class="cv cvicon-cv-play-circle"></i>
-                        <p>Mon compte</p>
-                    </a>
-                </li>
+                    <div class="relative group">
+                        <button class="flex items-center space-x-1 px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:text-gray-900">
+                            {{ user.username }}
+                            <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"></path>
+                            </svg>
+                        </button>
+                        <div class="hidden group-hover:block absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg z-50">
+                            <a href="/account" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Mon compte</a>
+                            <a href="/logout" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 border-t">Déconnexion</a>
+                        </div>
+                    </div>
                 {% else %}
-                <li>
-                    <a href="/login">
-                        <i class="cv cvicon-cv-play-circle"></i>
-                        <p>Connexion</p>
-                    </a>
-                </li>
-                <li>
-                    <a href="/register">
-                        <i class="fa fa-user"></i>
-                        <p>Inscription</p>
-                    </a>
-                </li>
+                    <a href="/login" class="text-gray-700 hover:text-gray-900">Connexion</a>
+                    <span class="text-gray-400">.</span>
+                    <a href="/register" class="text-gray-700 hover:text-gray-900">Inscription</a>
                 {% endif %}
-            </ul>
-        </div>
-        {% if user is not null %}
-        <a href="/logout" class="btn mobile-menu-logout">Déconnexion</a>
-        {% endif %}
-    </div>
-</div>
-
-    {% block body %}
-    {% endblock %}
-    <footer>
-        <div class="container-fluid">
-            <div class="row">
-                <div class="container padding-def">
-                    <div class="col-lg-1  col-sm-2 col-xs-12 footer-logo">
-                        <!--<a class="navbar-brand" href="/"><img src="/images/logo.png" alt="Project name" class="logo" /></a>-->
-                        <a class="navbar-brand" href="/">
-                            <img src="/images/logo.png" alt="Vide Grenier en ligne" class="logo" />
-                            <span>Vide Grenier en ligne</span>
-                        </a>
-                    </div>
-                    <div class="col-lg-7 col-sm-6 col-xs-12">
-                        <div class="f-copy">
-                            <ul class="list-inline">
-                                <li><a href="#">Politique relative aux cookies</a></li>
-                                <li><a href="#">Politique de confidentialité</a></li>
-                                <li>Copyright 2020 <a href="https://www.cesi.fr" class="hidden-xs">CESI</a></li>
-                            </ul>
-                        </div>
-                    </div>
-                    <div class="col-lg-offset-1 col-lg-3 col-sm-4 col-xs-12">
-                        <div class="f-last-line">
-                            <div class="f-icon pull-left">
-                                <a href="#"><i class="fa fa-facebook-square"></i></a>
-                                <a href="#"><i class="fa fa-twitter"></i></a>
-                                <a href="#"><i class="fa fa-google-plus"></i></a>
-                            </div>
-                            <div class="clearfix"></div>
-                        </div>
-                        <div class="delimiter visible-xs"></div>
-                    </div>
-                </div>
             </div>
         </div>
-    </footer>
-    <!-- /footer -->
-    <script src="/js/jquery.min.js"></script>
-    <script src="/bootstrap/js/bootstrap.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/gh/xcash/bootstrap-autocomplete@v2.3.7/dist/latest/bootstrap-autocomplete.min.js"></script>
-    <script src="/js/custom.js"></script>
+    </div>
+</nav>
 
-    {% block javascript %}
-    {% endblock %}
+<!-- Main Content -->
+{% block body %}
+{% endblock %}
+
+<!-- Footer -->
+<footer class="bg-gray-50 border-t border-gray-200 mt-20">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <!-- Logo -->
+            <div class="flex items-center">
+                <img src="/images/logo.png" alt="Logo" class="h-10 w-10">
+                <span class="ml-2 font-semibold">Vide Grenier en ligne</span>
+            </div>
+
+            <!-- Links -->
+            <div class="flex justify-center space-x-6 text-sm text-gray-600">
+                <a href="#" class="hover:text-gray-900">Politique cookies</a>
+                <a href="#" class="hover:text-gray-900">Confidentialité</a>
+                <span>© 2020 CESI</span>
+            </div>
+
+            <!-- Social -->
+            <div class="flex justify-end space-x-6">
+                <a href="#" class="text-gray-600 hover:text-gray-900"><i class="fab fa-facebook"></i></a>
+                <a href="#" class="text-gray-600 hover:text-gray-900"><i class="fab fa-twitter"></i></a>
+                <a href="#" class="text-gray-600 hover:text-gray-900"><i class="fab fa-google-plus"></i></a>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- Scripts -->
+<script src="/js/jquery.min.js"></script>
+<script src="/bootstrap/js/bootstrap.min.js"></script>
+<script src="/js/custom.js"></script>
+
+{% block javascript %}
+{% endblock %}
+
 </body>
 </html>

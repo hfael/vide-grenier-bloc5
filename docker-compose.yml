@@ -41,6 +41,20 @@ services:
       retries: 20
       start_period: 30s
 
+  phpmyadmin:
+    image: phpmyadmin:latest
+    container_name: vide-grenier-phpmyadmin
+    environment:
+      PMA_HOST: db
+      PMA_USER: videgrenier
+      PMA_PASSWORD: videgrenier
+      PMA_ROOT_PASSWORD: root
+    ports:
+      - "8090:80"
+    depends_on:
+      db:
+        condition: service_healthy
+
 volumes:
   db_data:
   vendor_data:

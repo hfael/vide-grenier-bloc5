@@ -3,97 +3,90 @@
 {% block title %}Accueil{% endblock %}
 
 {% block body %}
-<div class="content-wrapper">
-    <div class="container">
-        <div class="row">
-            <div class="col-lg-12">
+<main class="bg-gray-50 min-h-screen py-8">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
-                <div class="content-block head-div">
-                    <div class="cb-header">
-                        <div class="row">
-                            <div class="col-lg-10 col-sm-10 col-xs-8">
-                                <ul class="list-inline">
-                                    <li>
-                                        <a href="#" class="color-active">
-                                            <span class="visible-xs">À la une</span>
-                                            <span class="hidden-xs">À la une</span>
-                                        </a>
-                                    </li>
-                                    <li><a href="#">Autour de moi</a></li>
-                                </ul>
-                            </div>
-                            <div class="col-lg-2 col-sm-2 col-xs-4">
-                                <div class="btn-group pull-right bg-clean">
-                                    <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                        Filtrer par <span class="caret"></span>
-                                    </button>
-                                    <ul class="dropdown-menu">
-                                        <li><a onclick="getProductsAndRender('views')"><i
-                                                class="cv cvicon-cv-calender"></i>
-                                            Popularité</a></li>
-                                        <li><a onclick="getProductsAndRender('date')"><i
-                                                class="cv cvicon-cv-calender"></i>
-                                            Récent</a></li>
-                                    </ul>
-                                </div>
-                                <div class="clearfix"></div>
-                            </div>
-                        </div>
-                    </div>
+        <!-- Header -->
+        <div class="mb-8">
+            <div class="flex justify-between items-center mb-6">
+                <div class="flex space-x-6">
+                    <a href="#" class="text-red-500 font-semibold border-b-2 border-red-500">À la une</a>
+                    <a href="#" class="text-gray-600 hover:text-gray-900 font-semibold">Autour de moi</a>
+                </div>
 
-                    <div class="cb-content">
-                        <div class="row articlelist" id="articlelist">
-
-                        </div>
+                <!-- Filter Dropdown -->
+                <div class="relative group">
+                    <button class="px-4 py-2 text-gray-700 hover:text-gray-900 font-medium flex items-center space-x-2">
+                        <span>Filtrer par</span>
+                        <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"></path>
+                        </svg>
+                    </button>
+                    <div class="hidden group-hover:block absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg z-50">
+                        <button onclick="getProductsAndRender('views')" class="block w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-100">
+                            Popularité
+                        </button>
+                        <button onclick="getProductsAndRender('date')" class="block w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-100 border-t">
+                            Récent
+                        </button>
                     </div>
                 </div>
             </div>
+            <div class="h-1 bg-gray-200"></div>
         </div>
+
+        <!-- Products Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8" id="articlelist">
+            <!-- Products will be inserted here by JavaScript -->
+        </div>
+
     </div>
-</div>
+</main>
 
 {% endblock %}
 
-
 {% block javascript %}
-    <script type="text/javascript">
+<script type="text/javascript">
 
-        function getProductsAndRender(option = ''){
-            $.ajax({
-                url: "/api/products" + '?sort=' + option,
-            }).done(function(result) {
-                $('#articlelist').empty();
-                for(let i = 0; i < result.length; i++){
-                    renderProduct(result[i])
-                }
-            });
+function getProductsAndRender(option = ''){
+    $.ajax({
+        url: "/api/products" + '?sort=' + option,
+    }).done(function(result) {
+        $('#articlelist').empty();
+        for(let i = 0; i < result.length; i++){
+            renderProduct(result[i])
         }
+    });
+}
 
-        function renderProduct($product){
-            const picture = $product.picture ? '/storage/' + $product.picture : '/images/add-article.jpg';
-            const description = ($product.description || '').trim();
-            const excerpt = description.length > 60 ? description.slice(0, 60) + '...' : description;
+function renderProduct($product){
+    const picture = $product.picture ? '/storage/' + $product.picture : '/images/add-article.jpg';
+    const description = ($product.description || '').trim();
+    const excerpt = description.length > 60 ? description.slice(0, 60) + '...' : description;
 
-             $('<div class="col-lg-4 col-sm-6 articleitem">' +
-                '                                <div class="b-article">' +
-                '                                    <div class="v-img">' +
-                '                                        <a href="/product/'+ $product.id + '">' +
-                '                                            <img src="'+ picture +'" alt="Illustration article"></a>' +
-                '                                    </div>' +
-                '                                    <div class="v-desc">' +
-                '                                        <a href="/product/'+ $product.id + '">'+ $product.name+'</a>' +
-                '                                    </div>' +
-                '                                    <p>'+ excerpt +'</p>' +
-                '                                    <div class="v-views">' +
-                '                                        '+$product.views+' vues' +
-                '                                    </div>' +
-                '                                </div>' +
-                '</div>')
-             .appendTo($('#articlelist'));
-        }
+    const html = `
+        <div class="bg-white rounded-lg shadow hover:shadow-lg transition-shadow overflow-hidden">
+            <a href="/product/${$product.id}" class="block">
+                <div class="overflow-hidden bg-gray-200 h-64">
+                    <img src="${picture}" alt="${$product.name}" class="w-full h-full object-cover hover:scale-105 transition-transform">
+                </div>
+            </a>
+            <div class="p-4">
+                <a href="/product/${$product.id}" class="block">
+                    <h3 class="text-lg font-semibold text-gray-900 hover:text-red-500 mb-2">${$product.name}</h3>
+                </a>
+                <p class="text-gray-600 text-sm mb-3 line-clamp-2">${excerpt}</p>
+                <div class="text-gray-500 text-xs">${$product.views} vues</div>
+            </div>
+        </div>
+    `;
 
-        $( document ).ready(function() {
-            getProductsAndRender();
-        });
-    </script>
+    $('#articlelist').append(html);
+}
+
+$(document).ready(function() {
+    getProductsAndRender();
+});
+
+</script>
 {% endblock %}

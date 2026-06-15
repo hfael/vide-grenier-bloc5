@@ -1,99 +1,120 @@
 {% extends "base.html" %}
 
-{% block title %}Produit{% endblock %}
+{% block title %}{{ article.name }}{% endblock %}
 
 {% block body %}
+<main class="bg-gray-50 min-h-screen py-12">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
 
-<div class="single-article">
-    <div class="content-wrapper mt-40">
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-8 col-xs-12 col-sm-12">
-                    <div class="preview-article">
-                        <img src="{{ article.picture ? '/storage/' ~ article.picture : '/images/add-article.jpg' }}" alt="{{ article.name }}"/>
-                    </div>
-                    <h1><a href="#">{{ article.name }}</a></h1>
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
 
-                    <div class="author">
-                        <div class="author-head">
-                            <div class="sv-name">
-                                <div><a href="#">{{ article.username }}</a></div>
-                            </div>
-                        </div>
-
-                        <div class="author-border"></div>
-                        <div class="sv-views">
-                            <div class="sv-views-count">
-                                {{ article.views }} vues
-                            </div>
-                        </div>
-                        <div class="clearfix"></div>
-                    </div>
-                    <div class="info">
-                        <div class="info-content">
-                            <h4>Description :</h4>
-                            <p>{{ article.description }}</p>
-                        </div>
-                        <div class="u-area mt-small contact-seller">
-                            {% if contactSent %}
-                                <div class="alert alert-success" role="alert">
-                                    Votre message a bien été transmis au propriétaire.
-                                </div>
-                            {% endif %}
-
-                            <form method="post" action="">
-                                <h4>Contacter {{ article.username }}</h4>
-                                <div class="form-group">
-                                    <label for="contact-name">Votre nom</label>
-                                    <input type="text" class="form-control" id="contact-name" name="contact_name" required>
-                                </div>
-                                <div class="form-group">
-                                    <label for="contact-email">Votre email</label>
-                                    <input type="email" class="form-control" id="contact-email" name="contact_email" required>
-                                </div>
-                                <div class="form-group">
-                                    <label for="contact-message">Message</label>
-                                    <textarea class="form-control" id="contact-message" name="contact_message" rows="4" required></textarea>
-                                </div>
-                                <button type="submit" name="contact_submit" class="btn btn-primary u-btn">Envoyer</button>
-                            </form>
-                        </div>
-                    </div>
+            <!-- Product Image -->
+            <div class="lg:col-span-2">
+                <div class="bg-white rounded-lg shadow-lg overflow-hidden">
+                    <img src="{{ article.picture ? '/storage/' ~ article.picture : '/images/add-article.jpg' }}" alt="{{ article.name }}"
+                        class="w-full h-96 object-cover">
                 </div>
+            </div>
 
-                <div class="col-lg-4 col-xs-12 col-sm-12">
-                    <div class="content-block similar-videos">
-                        <div class="cb-header">
-                            <span>Vous aimerez peut-être...</span>
-                        </div>
-                        <div class="list">
-                            {% for suggestion in suggestions %}
-                                {% if suggestion.id != article.id %}
-                                <div class="h-article row">
-                                    <div class="col-xs-6">
-                                        <div class="v-img">
-                                            <a href="{{ '/product/' ~ suggestion.id }}">
-                                                <img src="{{ suggestion.picture ? '/storage/' ~ suggestion.picture : '/images/add-article.jpg' }}" alt="{{ suggestion.name }}">
-                                            </a>
-                                        </div>
-                                    </div>
-                                    <div class="col-xs-6">
-                                        <div class="v-desc">
-                                            <a href="{{ '/product/' ~ suggestion.id }}">{{ suggestion.name }}</a>
-                                        </div>
-                                        <div class="v-views">
-                                            {{ suggestion.views }} vues
-                                        </div>
-                                    </div>
-                                </div>
-                                {% endif %}
-                            {% endfor %}
-                        </div>
+            <!-- Product Details -->
+            <div>
+                <div class="bg-white rounded-lg shadow-lg p-6">
+                    <h1 class="text-3xl font-bold text-gray-900 mb-4">{{ article.name }}</h1>
+
+                    <!-- Author -->
+                    <div class="mb-6 pb-6 border-b border-gray-200">
+                        <p class="text-gray-600">
+                            <span class="font-semibold">Vendeur:</span> {{ article.username }}
+                        </p>
+                    </div>
+
+                    <!-- Views -->
+                    <div class="mb-6">
+                        <p class="text-gray-600">
+                            <span class="font-semibold">Vues:</span> {{ article.views }}
+                        </p>
+                    </div>
+
+                    <!-- Description -->
+                    <div class="mb-8">
+                        <h2 class="text-xl font-bold text-gray-900 mb-3">Description</h2>
+                        <p class="text-gray-700 whitespace-pre-line">{{ article.description }}</p>
                     </div>
                 </div>
             </div>
-        </div>
-    </div>
-</div>
 
-{% endblock body %}
+        </div>
+
+        <!-- Contact Form -->
+        <div class="mt-12 max-w-2xl mx-auto">
+            <div class="bg-white rounded-lg shadow-lg p-8">
+                <h2 class="text-2xl font-bold text-gray-900 mb-6">Contacter {{ article.username }}</h2>
+
+                {% if contactSent %}
+                    <div class="mb-6 p-4 bg-green-100 border border-green-400 text-green-700 rounded">
+                        Votre message a bien été transmis au propriétaire.
+                    </div>
+                {% endif %}
+
+                <form method="post" action="" class="space-y-6">
+
+                    <!-- Name -->
+                    <div>
+                        <label for="contact_name" class="block text-sm font-medium text-gray-700 mb-2">Votre nom</label>
+                        <input type="text" id="contact_name" name="contact_name" required
+                            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent outline-none">
+                    </div>
+
+                    <!-- Email -->
+                    <div>
+                        <label for="contact_email" class="block text-sm font-medium text-gray-700 mb-2">Votre email</label>
+                        <input type="email" id="contact_email" name="contact_email" required
+                            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent outline-none">
+                    </div>
+
+                    <!-- Message -->
+                    <div>
+                        <label for="contact_message" class="block text-sm font-medium text-gray-700 mb-2">Message</label>
+                        <textarea id="contact_message" name="contact_message" rows="5" required
+                            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent outline-none"></textarea>
+                    </div>
+
+                    <!-- Submit -->
+                    <button type="submit" name="contact_submit" class="w-full bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded-lg transition">
+                        Envoyer
+                    </button>
+
+                </form>
+            </div>
+        </div>
+
+        <!-- Suggestions -->
+        {% if suggestions %}
+        <div class="mt-16">
+            <h2 class="text-2xl font-bold text-gray-900 mb-8">Vous aimerez peut-être...</h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                {% for suggestion in suggestions %}
+                    {% if suggestion.id != article.id %}
+                    <div class="bg-white rounded-lg shadow hover:shadow-lg transition-shadow overflow-hidden">
+                        <a href="/product/{{ suggestion.id }}" class="block">
+                            <div class="overflow-hidden bg-gray-200 h-48">
+                                <img src="{{ suggestion.picture ? '/storage/' ~ suggestion.picture : '/images/add-article.jpg' }}"
+                                    alt="{{ suggestion.name }}" class="w-full h-full object-cover hover:scale-105 transition-transform">
+                            </div>
+                        </a>
+                        <div class="p-4">
+                            <a href="/product/{{ suggestion.id }}" class="block">
+                                <h3 class="font-semibold text-gray-900 hover:text-red-500">{{ suggestion.name }}</h3>
+                            </a>
+                            <p class="text-gray-500 text-sm mt-2">{{ suggestion.views }} vues</p>
+                        </div>
+                    </div>
+                    {% endif %}
+                {% endfor %}
+            </div>
+        </div>
+        {% endif %}
+
+    </div>
+</main>
+{% endblock %}

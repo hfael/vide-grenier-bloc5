@@ -43,6 +43,8 @@ class View
     {
         static $twig = null;
 
+        header('Content-Type: text/html; charset=utf-8');
+
         if ($twig === null) {
             $loader = new \Twig\Loader\FilesystemLoader(dirname(__DIR__) . '/App/Views');
             $twig = new \Twig\Environment($loader, ['debug' => true,]);
