@@ -3,5 +3,4 @@ vendor
 composer.lock
 TODO.md
 SUJETS/
-pdf/
 node_modules/
