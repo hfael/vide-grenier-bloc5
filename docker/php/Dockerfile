@@ -18,7 +18,7 @@ RUN chmod +x /usr/local/bin/app-entrypoint
 
 WORKDIR /var/www/html
 
-COPY . /var/www/html
+COPY . .
 
 ENTRYPOINT ["app-entrypoint"]
 CMD ["apache2-foreground"]
