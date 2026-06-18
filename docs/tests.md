@@ -48,6 +48,9 @@ docker compose -f docker-compose.prod.yml exec app_prod sh -lc "APP_BASE_URL=htt
 | Validation upload image | `annonce.JPG`, 120 Ko | Le fichier est accepte. |
 | Extension interdite | `script.php` | Une exception est levee. |
 | Fichier trop lourd | `photo.png`, 5 Mo | Une exception est levee. |
+| Routage statique | route `login` | Le routeur resout le controleur `User` et l'action `login`. |
+| Capture de parametre | URL `product/42` | Le parametre `id` capture vaut `42`. |
+| URL non routee | URL `product/abc` | Aucune route ne correspond (match faux). |
 
 ## Tests d'integration automatises
 
